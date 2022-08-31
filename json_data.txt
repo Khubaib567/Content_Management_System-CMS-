@@ -1,0 +1,24 @@
+{
+   "user_name":"Khubaib",
+  "user_password":"abc",
+  "user_email":"Khubaibahmed567@gmail.com"
+}
+
+{
+    "user_name":"Mudassar",
+  "user_password":"xyz",
+  "user_email":"abc@gmail.com"
+}
+
+
+{
+     "project_title":"CMS_Project",
+  "project_created":"Khubaib"
+
+}
+
+{
+     "project_title":"CRUD_Project",
+  "project_created":"Mudassar"
+
+}
