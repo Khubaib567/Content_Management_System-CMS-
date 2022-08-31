@@ -32,8 +32,7 @@ exports.create = (req, res) => {
 };
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-  // const id = req.query.id;
-  // var condition = id ? { id : { [Op.like]: `%${id}%` } } : null;
+  
   User.findAll({ include: ["projects"] })
     .then(data => {
       res.send(data);

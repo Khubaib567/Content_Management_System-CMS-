@@ -4,7 +4,7 @@ const User = db.users;
 const Op = db.Sequelize.Op;
 // Create and Save a new User
 exports.create = (req, res) => {
-    // Valuser_idate request
+    // Check the body of the request is null or not
     
     if (!req.body.project_title) {
       res.status(400).send({
@@ -13,31 +13,46 @@ exports.create = (req, res) => {
       return;
     }
     // Create a Project
+
     let project = {
       project_title: req.body.project_title,
       project_created: req.body.project_created,
       updated:req.body.updated ? req.body.updated : false
     };
+
+    // Save & Assign foreign_key to the project according to the respective user.
+
     let users,user;
     User.findAll()
      .then((data)=>{
         users = data
-        return users.find(obj => obj.user_name == project.project_created);
-      }).then((data)=>{
-          user = data
-    })
+        if(users == null){
+          Project.create(project)
+          .then(data => {
+            res.send(data);
+          }).catch(err => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating the User."
+            });
+          });
+        }
+        else if(users !== null){
+          user = users.find(obj => obj.user_name == project.project_created)
+          Project.create(project)
+          .then(data => {
+            user.setProjects(data)
+            res.send(data);
+          }).catch(err => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating the User."
+            });
+          });
+        }
+      })
      
-    // Save User in the database
-    Project.create(project)
-      .then(data => {
-        user.setProjects(data)
-        res.send(data);
-      }).catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the User."
-        });
-      });
+   
   }
 
   
@@ -56,6 +71,7 @@ exports.findAll = (req, res) => {
       });
     });
 };
+
 // Find a single project with a project_id
 exports.findOne = (req, res) => {
   const id = req.params.id
@@ -76,6 +92,7 @@ exports.findOne = (req, res) => {
     })
   
 };
+
 // Update a User by the user_id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
@@ -100,6 +117,7 @@ exports.update = (req, res) => {
     });
   
 };
+
 // Delete a User with the specified user_id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
@@ -123,6 +141,7 @@ exports.delete = (req, res) => {
       });
     });
 };
+
 // Delete all Users from the database.
 exports.deleteAll = (req, res) => {
   Project.destroy({
@@ -140,6 +159,7 @@ exports.deleteAll = (req, res) => {
     });
   
 };
+
 // Find all published Projects
 exports.findAllUpdated = (req, res) => {
   Project.findAll({ where: { updated: true } })
