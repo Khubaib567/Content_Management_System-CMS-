@@ -1,4 +1,5 @@
 const db = require("../model");
+const {runQuery} = require("./foreign_key");
 const Project = db.projects;
 const User = db.users;
 const Op = db.Sequelize.Op;
@@ -23,23 +24,23 @@ exports.create = (req, res) => {
     // Save & Assign foreign_key to the project according to the respective user.
 
     let users,user;
-    User.findAll()
-     .then((data)=>{
-        users = data
-        if(users == null){
+    return User.findAll({ include: ["projects"] })
+    .then(data => {
+      users= data
+      if(users == null){
           Project.create(project)
           .then(data => {
             res.send(data);
           }).catch(err => {
             res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the User."
-            });
+            message:
+            err.message || "Some error occurred while creating the User."
           });
-        }
-        else if(users !== null){
-          user = users.find(obj => obj.user_name == project.project_created)
-          Project.create(project)
+        });
+      }    
+        else{
+          user = users.find(obj => obj.user_name == project.project_created) 
+          return Project.create(project)
           .then(data => {
             user.setProjects(data)
             res.send(data);
@@ -50,11 +51,9 @@ exports.create = (req, res) => {
             });
           });
         }
-      })
-     
-   
-  }
+    })
 
+}
   
 // Retrieve all projects from the database.
 exports.findAll = (req, res) => {
