@@ -12,7 +12,7 @@ db.sequelize = sequelize;
 db.projects = require('./project.model.js')(sequelize, Sequelize);
 db.users = require("./user.model.js")(sequelize, Sequelize);
 
-//Link project & users db based on 'userid' as foreign_key & project_created attribute of project db.
+//Link project & users db based on 'userid' as foreign_key of user db & project_created attribute of project db.
 
 db.users.hasMany(db.projects,{onDelete: 'CASCADE',onUpdate:'CASCADE'});
 db.projects.belongsTo(db.users,{onDelete: 'CASCADE',onUpdate:'CASCADE'});
