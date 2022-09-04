@@ -27,7 +27,7 @@ exports.create = (req, res) => {
     .then(data => {
       users= data
       user = users.find(obj => obj.user_name == project.project_created) 
-      if(users == null){
+      if(user == null || user.user_name !== project.project_created ){
           Project.create(project)
           .then(data => {
             res.send(data);
@@ -37,19 +37,9 @@ exports.create = (req, res) => {
             err.message || "Some error occurred while creating the User."
           });
         });
+    
       }   
-      else if(user !== project.project_created ){
-          Project.create(project)
-          .then(data => {
-          res.send(data);
-          }).catch(err => {
-          res.status(500).send({
-          message:
-          err.message || "Some error occurred while creating the User."
-          });
-        });
-      }  
-        else{
+      else{
           return Project.create(project)
           .then(data => {
             user.setProjects(data)
