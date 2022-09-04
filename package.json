@@ -1,0 +1,19 @@
+{
+  "name": "sql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.4"
+  },
+  "description": ""
+}
