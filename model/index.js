@@ -1,6 +1,12 @@
+if(process.env.NODE !=="production"){
+  require('dotenv').config()
+}
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize('cms', 'Khubaib', 'Khubi@123', {
+const database = process.env.database;
+const user_name = process.env.user_name;
+const password = process.env.password;
+const sequelize = new Sequelize(database, user_name, password, {
   host: 'localhost',
   dialect: 'mysql' 
 
